@@ -18,7 +18,7 @@ var (
 )
 
 func main() {
-	region := "eu-west3"
+	region := "eu-west-3"
 	awsSession, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
 	})
