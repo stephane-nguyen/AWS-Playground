@@ -33,7 +33,7 @@ func FetchBoba(name, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*B
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"Name": {
+			"name": {
 				S: aws.String(name),
 			},
 		},
@@ -47,7 +47,7 @@ func FetchBoba(name, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*B
 	item := new(Boba)
 	err = dynamodbattribute.UnmarshalMap(result.Item, item)
 	if err != nil {
-		return nil, errors.New(ErrorFailedToFetchRecord)
+		return nil, errors.New(ErrorFailtedToUnmarshalRecord)
 	}
 
 	return item, nil
@@ -66,7 +66,7 @@ func FetchBobas(tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*[]Boba
 
 	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, items)
 	if err != nil {
-		return nil, errors.New(ErrorFailedToFetchRecord)
+		return nil, errors.New(ErrorFailtedToUnmarshalRecord)
 	}
 
 	return items, nil
@@ -136,7 +136,7 @@ func DeleteBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 	name := req.QueryStringParameters["name"]
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"Name": {
+			"name": {
 				S: aws.String(name),
 			},
 		},
