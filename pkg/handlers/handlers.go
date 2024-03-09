@@ -9,14 +9,15 @@ import (
 	"github.com/stephane-nguyen/Bubble-tea/pkg/boba"
 )
 
-var ErrorMethodnotAllowed = "method not allowed"
+var ErrorMethodNotAllowed = "method not allowed"
 
 type ErrorBody struct {
 	ErrorMsg *string `json:"error,omitempty"`
 }
 
-func GetBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*events.APIGatewayProxyResponse, error) {
-
+func GetBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*events.APIGatewayProxyResponse, error,
+) {
 	name := req.QueryStringParameters["name"]
 	result, err := boba.FetchBoba(name, tableName, dynaClient)
 
@@ -26,7 +27,9 @@ func GetBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dyn
 	return apiResponse(http.StatusOK, result)
 }
 
-func GetBobas(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*events.APIGatewayProxyResponse, error) {
+func GetBobas(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*events.APIGatewayProxyResponse, error,
+) {
 	result, err := boba.FetchBobas(tableName, dynaClient)
 	if err != nil {
 		return apiResponse(http.StatusBadRequest, ErrorBody{aws.String(err.Error())})
@@ -34,7 +37,9 @@ func GetBobas(req events.APIGatewayProxyRequest, tableName string, dynaClient dy
 	return apiResponse(http.StatusOK, result)
 }
 
-func CreateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*events.APIGatewayProxyResponse, error) {
+func CreateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*events.APIGatewayProxyResponse, error,
+) {
 	result, err := boba.CreateBoba(req, tableName, dynaClient)
 	if err != nil {
 		return apiResponse(http.StatusBadRequest, ErrorBody{aws.String(err.Error())})
@@ -42,7 +47,9 @@ func CreateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 	return apiResponse(http.StatusOK, result)
 }
 
-func UpdateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*events.APIGatewayProxyResponse, error) {
+func UpdateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*events.APIGatewayProxyResponse, error,
+) {
 	result, err := boba.UpdateBoba(req, tableName, dynaClient)
 	if err != nil {
 		return apiResponse(http.StatusBadRequest, ErrorBody{aws.String(err.Error())})
@@ -50,7 +57,9 @@ func UpdateBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 	return apiResponse(http.StatusOK, result)
 }
 
-func DeleteBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (*events.APIGatewayProxyResponse, error) {
+func DeleteBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*events.APIGatewayProxyResponse, error,
+) {
 	err := boba.DeleteBoba(req, tableName, dynaClient)
 	if err != nil {
 		return apiResponse(http.StatusBadRequest, ErrorBody{aws.String(err.Error())})
@@ -59,5 +68,5 @@ func DeleteBoba(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 }
 
 func UnhandledMethod() (*events.APIGatewayProxyResponse, error) {
-	return apiResponse(http.StatusMethodNotAllowed, ErrorMethodnotAllowed)
+	return apiResponse(http.StatusMethodNotAllowed, ErrorMethodNotAllowed)
 }
